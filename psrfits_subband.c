@@ -485,6 +485,10 @@ void init_subbanding(struct psrfits *pfi, struct psrfits *pfo,
     // In case we are changing the number of bits in the data
     pfo->hdr.nbits = cmd->outbits;
 
+    // deal with the NSUBOFF key -- Weiwei Zhu
+    /*printf("***debug NSUBOFFS: %d %d \n", pfi->hdr.offset_subint, pfo->hdr.offset_subint );*/
+    pfo->hdr.offset_subint = pfi->hdr.offset_subint;
+
     // Determine the length of the outputfiles to use
     if (cmd->filetimeP) {
         pfo->rows_per_file = 10 * \
@@ -557,14 +561,14 @@ void read_weights(char *filenm, int *numchan, float **weights)
     FILE *infile;
     int ii, N, chan;
     float wgt;
-    char line[80];
+    char line[100];
 
     infile = fopen(filenm, "r");
 
     // Read the input file once to count the lines
     N = 0;
     while (!feof(infile)){
-        if (fgets(line, 80, infile) != NULL) {
+        if (fgets(line, 100, infile) != NULL) {
             if (line[0]!='#') {
                 sscanf(line, "%d %f\n", &chan, &wgt);
                 N++;
@@ -580,7 +584,7 @@ void read_weights(char *filenm, int *numchan, float **weights)
     rewind(infile);
     ii = 0;
     while (ii < N) {
-        if (fgets(line, 80, infile) != NULL) {
+        if (fgets(line, 100, infile) != NULL) {
             if (line[0]!='#') {
                 sscanf(line, "%d %f\n", &chan, (*weights)+ii);
                 ii++;
@@ -597,14 +601,14 @@ void read_bandpass(struct psrfits *pf, char *filenm, int *numchan,
     FILE *infile;
     int ii, N, chan;
     float *frqs, freq, avg, std;
-    char line[80], *ret;
+    char line[100], *ret;
 
     infile = fopen(filenm, "r");
 
     // Read the input file once to count the lines
     N = 0;
     while (!feof(infile)){
-        if (fgets(line, 80, infile) != NULL) {
+        if (fgets(line, 100, infile) != NULL) {
             if (line[0]!='#') {
                 sscanf(line, "%d %f %f %f\n", &chan, &freq, &avg, &std);
                 N++;
@@ -628,7 +632,7 @@ void read_bandpass(struct psrfits *pf, char *filenm, int *numchan,
     rewind(infile);
     ii = 0;
     while (ii < N) {
-        if (fgets(line, 80, infile) != NULL) {
+        if (fgets(line, 100, infile) != NULL) {
             if (line[0]!='#') {
                 sscanf(line, "%d %f %f %f\n", &chan, frqs+ii, (*avgs)+ii, (*stds)+ii);
                 ii++;

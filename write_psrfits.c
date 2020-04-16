@@ -59,7 +59,7 @@ int psrfits_create(struct psrfits *pf) {
         pf->tot_rows = 0;
         pf->N = 0L;
         pf->T = 0.0;
-        hdr->offset_subint = 0;
+        /*hdr->offset_subint = 0;*/
         pf->mode = 'w';
 
         // Create the output directory if needed
@@ -76,7 +76,7 @@ int psrfits_create(struct psrfits *pf) {
     }
     pf->filenum++;
     pf->rownum = 1;
-    hdr->offset_subint = pf->tot_rows;
+    /*hdr->offset_subint = pf->tot_rows;*/
 
     // Update the filename - don't include filenum for fold mode
     // TODO : use rf/cf extensions for psr/cals?
